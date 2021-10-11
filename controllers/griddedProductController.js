@@ -123,12 +123,14 @@ exports.get_non_uniform_grid_window = function(req, res , next) {
     const gridName = req.query.gridName
     const latRange = JSON.parse(req.query.latRange)
     const lonRange = JSON.parse(req.query.lonRange)
-    const date = moment.utc(req.query.date, 'YYYY-MM-DD')
-
+    const date = moment.utc(req.query.date, 'YYYY-MM-DD') 
     const GridModel = helper.get_grid_model(Grid, gridName)
     let agg = []
+    // hackaroo to get the date lookup to work
+    //date = new Date(req.query.date)
+    //agg.push({$match: {pres: pres, date: date, gridName: gridName }})
+    // end hackaroo
     agg.push({$match: {pres: pres, date: date.format('YYYY-MM-DD'), gridName: gridName }})
-
     const proj =  {$project: { // query for lat lng ranges
             pres: -1,
             date: -1,

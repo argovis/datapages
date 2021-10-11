@@ -12,7 +12,8 @@ const makeColorChartDataArrays = function(profiles) {
     let data_modes = []
 
     for(let idx=0; idx < profiles.length; idx++) {
-        const profile = profiles[idx]
+        let profile = profiles[idx]
+        profile = adaptor(profile)
         let profileMeas = reduceGPSMeasurements(profile, 200)
         profileMeas = collateProfileMeasurements(profileMeas)
         psal = psal.concat(profileMeas.psal)
@@ -25,7 +26,6 @@ const makeColorChartDataArrays = function(profiles) {
         ids.push(_id)
         lats.push(profile.lat)
         longs.push(profile.lon)
-
         const id_array = Array.apply(null, Array(profileMeas.pres.length)).map(String.prototype.valueOf,_id)
         const data_mode_array = Array.apply(null, Array(profileMeas.pres.length)).map(String.prototype.valueOf,data_mode)
         const time_array = Array.apply(null, Array(profileMeas.pres.length)).map(String.prototype.valueOf,timeStr)
@@ -36,7 +36,6 @@ const makeColorChartDataArrays = function(profiles) {
         cycles = cycles.concat(cycle_array)
 
     }
-
     let dataArrays  = {}
     dataArrays.temp = temp
     dataArrays.psal = psal
@@ -191,6 +190,24 @@ const makeColorChartMeasurements = function(chartData) {
         }
 
 return measurements
+}
+
+const adaptor = function(prof){
+    //takes a profile object and appends custom keys, replacing some of the mongoose virtuals
+
+    p = JSON.parse(JSON.stringify(prof))
+
+    if (p.DATA_MODE) {
+      p.core_data_mode = p.DATA_MODE
+    }
+    else if (p.PARAMETER_DATA_MODE.length > 0) {
+      p.core_data_mode = p.PARAMETER_DATA_MODE[0]
+    }
+    else {
+      p.core_data_mode = 'Unknown'
+    }
+    
+    return p
 }
 
 // module.exports = {

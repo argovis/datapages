@@ -1,6 +1,7 @@
 const Profile = require('../models/profile')
 const async = require('async')
 const moment = require('moment')
+const got = require('got');
 const helper = require('../public/javascripts/controllers/profileHelperFunctions')
 const HELPER_CONST = require('../public/javascripts/controllers/profileHelperConstants')
 
@@ -80,34 +81,69 @@ exports.platform_detail = function (req, res, next) {
     else {
         query.select('-bgcMeas') // BGC is usually too much data
     }
-    query.exec(function (err, profiles) {
-        if (err) return next(err)
 
-        if (req.params.format==='page'){
-            if (profiles.length === 0) { res.send('platform not found') }
-            else {
-                res.render('platform_page', {title:req.params.platform_number, profiles: JSON.stringify(profiles), moment: moment })
+    got('http://api:8080/profiles?platforms='+platform_number+'&coreMeasurements=all').then(
+        (resdata) => {
+            profiles = JSON.parse(resdata.body)
+
+            if (req.params.format==='page'){
+                if (profiles.length === 0) { res.send('platform not found') }
+                else {
+                    res.render('platform_page', {title:req.params.platform_number, profiles: JSON.stringify(profiles), moment: moment })
+                }
             }
-        }
-        else if (req.params.format==='page2'){
-            if (profiles.length === 0) { res.send('platform not found') }
-            else {
-                res.render('platform_page_2', {title:req.params.platform_number, profiles: JSON.stringify(profiles), moment: moment })
+            else if (req.params.format==='page2'){
+                if (profiles.length === 0) { res.send('platform not found') }
+                else {
+                    res.render('platform_page_2', {title:req.params.platform_number, profiles: JSON.stringify(profiles), moment: moment })
+                }
             }
-        }
-        else if (req.params.format==='bgcPage'){
-            if (profiles.length === 0) { res.send('platform not found') }
-            else {
-                res.render('bgc_platform_page', {title:req.params.platform_number, profiles: JSON.stringify(profiles), moment: moment })
+            else if (req.params.format==='bgcPage'){
+                if (profiles.length === 0) { res.send('platform not found') }
+                else {
+                    res.render('bgc_platform_page', {title:req.params.platform_number, profiles: JSON.stringify(profiles), moment: moment })
+                }
             }
-        }
-        else{
-            if (profiles.length === 0) { res.send('platform not found') }
-            else {
-                res.json(profiles)
+            else{
+                if (profiles.length === 0) { res.send('platform not found') }
+                else {
+                    res.json(profiles)
+                }
             }
+        },
+        (rej) => {
+            return next(err)
         }
-    })
+    )    
+
+    // query.exec(function (err, profiles) {
+    //     if (err) return next(err)
+
+    //     if (req.params.format==='page'){
+    //         if (profiles.length === 0) { res.send('platform not found') }
+    //         else {
+    //             res.render('platform_page', {title:req.params.platform_number, profiles: JSON.stringify(profiles), moment: moment })
+    //         }
+    //     }
+    //     else if (req.params.format==='page2'){
+    //         if (profiles.length === 0) { res.send('platform not found') }
+    //         else {
+    //             res.render('platform_page_2', {title:req.params.platform_number, profiles: JSON.stringify(profiles), moment: moment })
+    //         }
+    //     }
+    //     else if (req.params.format==='bgcPage'){
+    //         if (profiles.length === 0) { res.send('platform not found') }
+    //         else {
+    //             res.render('bgc_platform_page', {title:req.params.platform_number, profiles: JSON.stringify(profiles), moment: moment })
+    //         }
+    //     }
+    //     else{
+    //         if (profiles.length === 0) { res.send('platform not found') }
+    //         else {
+    //             res.json(profiles)
+    //         }
+    //     }
+    // })
 }
 
 // Display platform metadata
