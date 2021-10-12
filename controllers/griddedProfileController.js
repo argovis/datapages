@@ -1,4 +1,3 @@
-const Profile = require('../models/profile');
 const moment = require('moment');
 const helper = require('../public/javascripts/controllers/profileHelperFunctions')
 const HELPER_CONST = require('../public/javascripts/controllers/profileHelperConstants')

@@ -1,4 +1,3 @@
-const tcTraj = require('../models/tcTraj');
 const moment = require('moment');
 
 const TRAJ_GROUP = { _id: '$stormName',

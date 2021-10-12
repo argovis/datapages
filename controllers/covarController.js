@@ -1,4 +1,3 @@
-const Covar = require('../models/covar');
 const GJV = require('geojson-validation');
 
 exports.radius_selection = function(req, res , next) {

@@ -93,7 +93,7 @@ html(lang='en')
         const lon = !{profile.lon}
         const _id = JSON.stringify(#{profile.platform_number}) + '_' + JSON.stringify(#{profile.cycle_number})
 
-        let meas = [!{profile.measurements}];
+        let meas = !{measurements};
         meas = collateMeasurements(meas)
 
 
