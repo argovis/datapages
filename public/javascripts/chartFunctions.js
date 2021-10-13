@@ -72,7 +72,6 @@ const reduceGPSMeasurements = function(profile, maxLength) {
     }
 }
 
-const dropNegNineNineNine = function(value){ if (value != -999) {return(value)}};
 const roundArray = function (value){ return(Number(value).toFixed(3)) };
 
 const getMaskForPair = function(arrayOne, arrayTwo) {
