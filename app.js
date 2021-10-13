@@ -6,19 +6,9 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
 const config = require('config');
-const fs = require('fs');
-const yaml = require('js-yaml');
-const swaggerDocs = yaml.load(fs.readFileSync('./public/api-docs/swagger.yaml', {encoding: 'utf-8'}));
-const debug = require('debug')('app');
 
-//const index = require('./routes/index');
 const catalog = require('./routes/catalog');  //Import routes for "catalog" area of site
 const selection = require('./routes/selection');  //Import routes for "selection" area of site
-// const gridding = require('./routes/gridding');  //Import routes for "selection" area of site
-// const griddedProducts = require('./routes/griddedProducts');  //Import routes for "griddedProduct" area of site
-// const covarGrid = require('./routes/covarGrid'); //Import used for gridding
-// const arShapes = require('./routes/arShapes');
-// const tcTraj = require('./routes/tc');
 
 const compression = require('compression'); //All routes are compressed
 const helmet = require('helmet'); //sets appropriate HTTP headers
@@ -49,16 +39,9 @@ app.use(expressValidator());
 express.static.mime.define({'application/wasm': ['wasm']});
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, './../dist'))); // Point static path to ng dist
 app.use(express.static('public'))
-// app.use('/', index);
 app.use('/catalog', catalog);
 app.use('/selection', selection);
-// app.use('/gridding', gridding);
-// app.use('/covarGrid', covarGrid);
-// app.use('/griddedProducts', griddedProducts);
-// app.use('/arShapes', arShapes);
-// app.use('/tc', tcTraj);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
