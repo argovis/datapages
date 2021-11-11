@@ -1,6 +1,7 @@
 const got = require('got');
 const moment = require('moment')
 const mutates = require('../public/javascripts/mutates')
+const helpers = require('./helpers')
 
 exports.profile_detail = function (req, res, next) {
 
@@ -13,7 +14,7 @@ exports.profile_detail = function (req, res, next) {
         res.render('error', {message: 'Path not found; should end in <profile ID>/page or <profile ID>/bgcPage.'}) 
     }
 
-    got(endpoint).then(
+    got(endpoint, helpers.headers).then(
         (resdata) => {
             profile = mutates.profile_mutate(JSON.parse(resdata.body)[0])
             if (req.params.format==='page'){
@@ -26,6 +27,7 @@ exports.profile_detail = function (req, res, next) {
             else if (req.params.format==='bgcPage'){
                 profileDate = moment.utc(profile.date).format('YYYY-MM-DD HH:mm')
                 res.render('bgc_profile_page', {title: req.params._id, profile: profile,
+                                                measurements: JSON.stringify(profile.bgcMeas),
                                                 platform_number: profile.platform_number,
                                                 paramKeys: profile.bgcMeasKeys, profileDate: profileDate})
             }
@@ -38,7 +40,7 @@ exports.profile_detail = function (req, res, next) {
 exports.selected_profile_list = function(req, res , next) {
 
     let endpoint = 'http://api:8080/profiles?'.concat(req._parsedUrl.query);
-    got(endpoint).then(
+    got(endpoint, helpers.headers).then(
         (resdata) => {
             profiles = JSON.parse(resdata.body).map(p => mutates.profile_mutate(p))
             console.log(profiles.length)
