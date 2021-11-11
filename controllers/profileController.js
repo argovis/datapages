@@ -27,6 +27,7 @@ exports.profile_detail = function (req, res, next) {
             else if (req.params.format==='bgcPage'){
                 profileDate = moment.utc(profile.date).format('YYYY-MM-DD HH:mm')
                 res.render('bgc_profile_page', {title: req.params._id, profile: profile,
+                                                measurements: JSON.stringify(profile.bgcMeas),
                                                 platform_number: profile.platform_number,
                                                 paramKeys: profile.bgcMeasKeys, profileDate: profileDate})
             }
