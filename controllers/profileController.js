@@ -39,11 +39,10 @@ exports.profile_detail = function (req, res, next) {
 
 exports.selected_profile_list = function(req, res , next) {
 
-    let endpoint = 'http://api:8080/profiles?'.concat(req._parsedUrl.query);
+    let endpoint = 'http://api:8080/profiles?'.concat(req._parsedUrl.query).concat('&coreMeasurements=all');
     got(endpoint, helpers.headers).then(
         (resdata) => {
             profiles = JSON.parse(resdata.body).map(p => mutates.profile_mutate(p))
-            console.log(profiles.length)
             if (profiles.length === 0 ) res.send('profile not found')
             else {
                 res.render('selected_profile_page', {title:'Custom selection', profiles: JSON.stringify(profiles), moment: moment, url: req.originalUrl })
